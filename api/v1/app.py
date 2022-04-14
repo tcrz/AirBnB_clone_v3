@@ -2,7 +2,7 @@
 """
 summary_
 """
-from flask import Flask
+from flask import Flask, jsonify, make_response
 from models import storage
 from api.v1.views import app_views
 import os
@@ -16,6 +16,12 @@ app.register_blueprint(app_views, url_prefix='/api/v1')
 def teardown(exception):
     """runs this method when app context tears down"""
     storage.close()
+
+
+@app.errorhandler(404)
+def not_found(error):
+    """handle 404 error and return JSON-formatted 404 status code response"""
+    return make_response(jsonify(error="Not found"), 404)
 
 
 if __name__ == "__main__":
