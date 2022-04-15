@@ -29,3 +29,7 @@ class TestIntegrations(TestCase):
         response = self.app.get('api/v1/states')
         self.assertEqual(response.status_code, 200)
         print(response.data)
+
+
+if __name__ == '__main__':
+    unittest.main()
