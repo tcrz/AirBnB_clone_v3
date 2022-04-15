@@ -65,8 +65,7 @@ def add_review(place_id):
         # return (jsonify(error="Not a JSON"), 404)
     if 'user_id' not in request.get_json():
         return ("Missing user_id\n", 400)
-    user = [user for user in users if user['id'] ==
-            request.get_json('user_id')]
+    user = [user for user in users if user['id'] == user_id]
     if len(user) == 0:
         abort(404)
     if 'text' not in request.get_json():
