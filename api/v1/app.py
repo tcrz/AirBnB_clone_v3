@@ -9,6 +9,7 @@ import os
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+app.url_map.strict_slashes = False
 app.register_blueprint(app_views, url_prefix='/api/v1')
 
 
