@@ -51,7 +51,6 @@ def add_state():
     request_data = request.get_json()
     new_state = State(name=request_data['name'])
     states.append(new_state.to_dict())
-    new_state.save()
     return jsonify(new_state.to_dict()), 201
 
 
@@ -68,5 +67,4 @@ def update_state(state_id):
     request_data.pop('created_at', None)
     request_data.pop('updated_at', None)
     state[0].update(request_data)
-    state[0].save()
     return jsonify(state[0]), 200
