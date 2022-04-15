@@ -51,6 +51,7 @@ def add_state():
     request_data = request.get_json()
     new_state = State(name=request_data['name'])
     states.append(new_state.to_dict())
+    new_state.save()
     return jsonify(new_state.to_dict()), 201
 
 
@@ -62,10 +63,10 @@ def update_state(state_id):
         abort(404)
     if not request.get_json(force=True, silent=True):
         return ("Not a JSON\n", 400)
-        # return (jsonify(error="Not a JSON"), 400)
     request_data = request.get_json()
     request_data.pop('id', None)
     request_data.pop('created_at', None)
     request_data.pop('updated_at', None)
     state[0].update(request_data)
+    state[0].save()
     return jsonify(state[0]), 200
