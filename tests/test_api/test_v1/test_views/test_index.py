@@ -1,8 +1,8 @@
-from unittest import TestCase
+import unittest
 from api.v1.app import app
 
 
-class TestIntegrations(TestCase):
+class TestIndexBlueprint(unittest.TestCase):
     def setUp(self):
         """set up app for testing"""
         self.app = app.test_client()
@@ -21,3 +21,9 @@ class TestIntegrations(TestCase):
         response = self.app.get('/api/v1/nop')
         self.assertEqual(b'{\n  "error": "Not found"\n}\n', response.data)
         self.assertEqual(response.status_code, 404)
+
+    def test_stats(self):
+        """tests the stats route"""
+        response = self.app.get('api/v1/stats')
+        stats = response.data
+        assert stats in response.data

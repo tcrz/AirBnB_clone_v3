@@ -33,7 +33,7 @@ def get_states_cities(state_id):
 
 @app_views.route('/cities/<city_id>')
 def get_cities(city_id):
-    """"Retrieves the list of all State objects """
+    """"Retrieves the list of all City objects """
     city = [city for city in cities if city['id'] == city_id]
     if len(city) == 0:
         abort(404)
@@ -51,7 +51,7 @@ def delete_city(city_id):
 
 
 @app_views.route('/states/<state_id>/cities', methods=['POST'])
-def add_city():
+def add_city(state_id):
     """creates a City"""
     state = [state for state in states if state['id'] == state_id]
     if len(state) == 0:
@@ -70,7 +70,7 @@ def add_city():
 
 @app_views.route('/cities/<city_id>', methods=['PUT'])
 def update_city(city_id):
-    """updates a state"""
+    """updates a city"""
     city = [city for city in cities if city['id'] == city_id]
     if len(city) == 0:
         abort(404)
