@@ -11,15 +11,19 @@ from models.user import User
 
 
 places = []
-reviews = []
-users = []
-users_dict = storage.all(User)
 places_dict = storage.all(Place)
-reviews_dict = storage.all(Review)
 for k, v in places_dict.items():
     places.append(v.to_dict())
+
+reviews = []
+reviews_dict = storage.all(Review)
 for k, v in reviews_dict.items():
     reviews.append(v.to_dict())
+
+users = []
+users_dict = storage.all(User)
+for k, v in users_dict.items():
+    users.append(v.to_dict())
 
 
 @app_views.route('/places/<place_id>/reviews')
@@ -36,8 +40,8 @@ def get_places_review(place_id):
 
 
 @app_views.route('/reviews/<review_id>')
-def get_reviews(review_id):
-    """"Retrieves the list of all Review objects """
+def get_review(review_id):
+    """"Retrieves a Review object"""
     review = [review for review in reviews if review['id'] == review_id]
     if len(review) == 0:
         abort(404)
@@ -57,25 +61,27 @@ def delete_review(review_id):
 @app_views.route('/places/<place_id>/reviews', methods=['POST'])
 def add_review(place_id):
     """creates a reviews"""
-    palce = [place for place in places if place['id'] == place_id]
+    place = [place for place in places if place['id'] == place_id]
     if len(place) == 0:
         abort(404)
     if not request.get_json(force=True, silent=True):
         return ("Not a JSON\n", 400)
-        # return (jsonify(error="Not a JSON"), 404)
     if 'user_id' not in request.get_json():
         return ("Missing user_id\n", 400)
-    user = [user for user in users if user['id'] == user_id]
+    user = [
+        user for user in users if user['id'] == request.get_json()['user_id']
+        ]
     if len(user) == 0:
+        print("no user")
         abort(404)
     if 'text' not in request.get_json():
         return ("Missing text\n", 400)
-        # return (jsonify(message="Missing name"), 404)
     request_data = request.get_json()
-    new_place = Place(text=request_data['text'], place_id=place_id,
-                      user_id=user_id)
-    places.append(new_place.to_dict())
-    return jsonify(new_place.to_dict()), 201
+    new_review = Review(text=request_data['text'],
+                        place_id=place_id,
+                        user_id=request.get_json()['user_id'])
+    reviews.append(new_review.to_dict())
+    return jsonify(new_review.to_dict()), 201
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'])
@@ -86,7 +92,6 @@ def update_review(review_id):
         abort(404)
     if not request.get_json(force=True, silent=True):
         return ("Not a JSON\n", 400)
-        # return (jsonify(error="Not a JSON"), 400)
     request_data = request.get_json()
     request_data.pop('id', None)
     request_data.pop('user_id', None)
