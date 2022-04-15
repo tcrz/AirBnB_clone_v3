@@ -67,6 +67,7 @@ def update_user(user_id):
         # return (jsonify(error="Not a JSON"), 400)
     request_data = request.get_json()
     request_data.pop('id', None)
+    request_data.pop('email', None)
     request_data.pop('created_at', None)
     request_data.pop('updated_at', None)
     user[0].update(request_data)
