@@ -72,7 +72,7 @@ def add_review(place_id):
         return ("Missing text\n", 400)
         # return (jsonify(message="Missing name"), 404)
     request_data = request.get_json()
-    new_place = Place(text=request_data['text'], place_id=place_id, 
+    new_place = Place(text=request_data['text'], place_id=place_id,
                       user_id=user_id)
     places.append(new_place.to_dict())
     return jsonify(new_place.to_dict()), 201
