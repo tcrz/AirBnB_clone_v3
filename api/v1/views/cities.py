@@ -16,9 +16,6 @@
 #     states.append(v.to_dict())
 # for k, v in cities_dict.items():
 #     cities.append(v.to_dict())
-# """for stat in states:
-#     for city in stat.cities:
-#         cscity.append(city)"""
 
 
 # @app_views.route('/states/<state_id>/cities')
