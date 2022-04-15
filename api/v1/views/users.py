@@ -45,11 +45,13 @@ def add_user():
     if not request.get_json(force=True, silent=True):
         return ("Not a JSON\n", 400)
         # return (jsonify(error="Not a JSON"), 404)
-    if 'name' not in request.get_json():
-        return ("Missing name\n", 400)
+    if 'email' not in request.get_json():
+        return ("Missing email\n", 400)
         # return (jsonify(message="Missing name"), 404)
+    if 'password' not in request.get_json():
+        return ("Missing password\n",400)
     request_data = request.get_json()
-    new_user = User(name=request_data['name'])
+    new_user = User(email=request_data['email'], password=request_data['password'])
     users.append(new_user.to_dict())
     return jsonify(new_user.to_dict()), 201
 
