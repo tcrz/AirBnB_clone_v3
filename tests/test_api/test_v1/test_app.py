@@ -6,7 +6,6 @@ from models import storage
 class TestIntegrations(TestCase):
     def setUp(self):
         """set up app for testing"""
-        from models import storage
         self.app = app.test_client()
 
     # Index view
