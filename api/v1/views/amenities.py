@@ -49,7 +49,7 @@ def add_amenity():
         return ("Missing name\n", 400)
         # return (jsonify(message="Missing name"), 404)
     request_data = request.get_json()
-    new_amenity = Amenity(name=request_data['name'])
+    new_amenity = Amenity(**request_data)
     amenities.append(new_amenity.to_dict())
     return jsonify(new_amenity.to_dict()), 201
 
