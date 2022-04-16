@@ -49,9 +49,10 @@ def add_user():
         return ("Missing email\n", 400)
         # return (jsonify(message="Missing name"), 404)
     if 'password' not in request.get_json():
-        return ("Missing password\n",400)
+        return ("Missing password\n", 400)
     request_data = request.get_json()
-    new_user = User(email=request_data['email'], password=request_data['password'])
+    new_user = User(email=request_data['email'],
+                    password=request_data['password'])
     users.append(new_user.to_dict())
     return jsonify(new_user.to_dict()), 201
 
