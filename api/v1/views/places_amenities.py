@@ -35,7 +35,8 @@ def delete_linked_amenity(place_id, amenity_id):
         place.amenities.remove(amn[0])
     else:
         place.amenity_id.remove(amn[0])
-    place.save()
+    amn[0].delete()
+    storage.save()
     return jsonify({}), 200
 
 
@@ -54,5 +55,5 @@ def link_amn_to_place(place_id, amenity_id):
         place.amenities.append(amenity)
     else:
         place.amenity_ids.append(amenity)
-    place.save()
+    amenity.save()
     return (jsonify(amenity.to_dict), 201)
