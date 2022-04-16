@@ -60,7 +60,6 @@ def update_amenity(amenity_id):
         abort(404)
     if not request.get_json(force=True, silent=True):
         return ("Not a JSON\n", 400)
-        # return (jsonify(error="Not a JSON"), 400)
     request_data = request.get_json()
     request_data.pop('id', None)
     request_data.pop('created_at', None)
