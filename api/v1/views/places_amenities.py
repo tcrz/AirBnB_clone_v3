@@ -40,7 +40,7 @@ def delete_linked_amenity(place_id, amenity_id):
 
 
 @app_views.route('/api/v1/places/<place_id>/amenities/<amenity_id>',
-                 methods['POST'])
+                 methods=['POST'])
 def link_amn_to_place(place_id, amenity_id):
     """Link a Amenity object to a Place"""
     place = storage.get(Place, place_id)
