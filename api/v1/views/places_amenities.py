@@ -18,8 +18,8 @@ def amenties_of_place(place_id):
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
-    amn_dict = [amn.to_dict() for amn in place.amenities]
-    return(jsonify(amn_dict))
+    amn_dict = [amn.to_dict() for amn in place.amenities if amn.id == place_id]
+    return (jsonify(amn_dict))
 
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
@@ -37,7 +37,7 @@ def delete_linked_amenity(place_id, amenity_id):
         place.amenity_id.remove(amn[0])
     amn[0].delete()
     storage.save()
-    return jsonify({}), 200
+    return (jsonify({}), 200)
 
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
