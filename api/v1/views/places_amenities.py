@@ -18,7 +18,7 @@ def amenties_of_place(place_id):
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
-    amn_dict = [amn.to_dict() for amn in place.amenities if amn.id == place_id]
+    amn_dict = [amn.to_dict() for amn in place.amenities]
     return (jsonify(amn_dict))
 
 
