@@ -49,7 +49,7 @@ def link_amn_to_place(place_id, amenity_id):
         abort(404)
     for amn in place.amenities:
         if amn.id == amenity_id:
-            return (jsonify(amenity.to_dict), 200)
+            return (jsonify(amenity.to_dict()), 200)
     if storage_type == 'db':
         place.amenities.append(amenity)
     else:
