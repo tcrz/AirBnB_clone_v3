@@ -8,21 +8,8 @@ from models import storage
 from models.city import City
 from models.place import Place
 from models.user import User
-
-# users = []
-# users_dict = storage.all(User)
-# for k, v in users_dict.items():
-#     users.append(v.to_dict())
-
-# places = []
-# places_dict = storage.all(Place)
-# for k, v in places_dict.items():
-#     places.append(v.to_dict())
-
-# cities = []
-# cities_dict = storage.all(City)
-# for k, v in cities_dict.items():
-#     cities.append(v.to_dict())
+from models.state import State
+from models.amenity import Amenity
 
 
 @app_views.route('/cities/<city_id>/places')
@@ -52,10 +39,10 @@ def get_place(place_id):
 def delete_place(place_id):
     """Deletes a Place object"""
     place = storage.get(Place, place_id)
-    all_cities = storage.all(Place)
+    all_places = storage.all(Place)
     if not place:
         abort(404)
-    for k, v in all_cities.items():
+    for k, v in all_places.items():
         if v.id == place_id:
             v.delete()
             storage.save()
@@ -105,3 +92,64 @@ def update_place(place_id):
         setattr(place, key, request_data[key])
     place.save()
     return jsonify(place.to_dict()), 200
+
+
+@app_views.route('/places_search', methods=['POST'])
+def places_search():
+    """places search"""
+    places = [place.to_dict() for place in storage.all(Place).values()]
+    request_data = request.get_json(force=True, silent=True)
+    if not request_data and request_data != {}:
+        return ("Not a JSON\n", 400)
+    data = [val for val in request_data.values() if len(val) != 0]
+    if not data:
+        return jsonify(places)
+    results = []
+    for key, value in request_data.items():
+        if key == 'states':
+            for id in value:
+                for city in storage.get(State, id).cities:
+                    for place in city.places:
+                        results.append(place)
+        if key == 'cities':
+            for id in value:
+                for place in storage.get(City, id).places:
+                    results.append(place)
+        if key == 'amenities':
+            amn_results = []
+            if len(results) != 0:
+                for place in results:
+                    amn_ids = [amn.id for amn in place.amenities]
+                    if set(value).issubset(amn_ids):
+                        amn_results.append(place)
+                amn_results = set(amn_results)
+                # for place in amn_results:
+                #     print('-------')
+                #     for i in place.amenities:
+                #         print(i.name)
+                amn_results = [place.to_dict() for place in amn_results]
+                for place in amn_results:
+                    del place['amenities']
+                return jsonify(amn_results)
+            else:
+                # print('ok')
+                for place in storage.all(Place).values():
+                    # print('here')
+                    amn_ids = [amn.id for amn in place.amenities]
+                    # print(amn_ids)
+                    # print(value)
+                    if set(value).issubset(amn_ids):
+                        # print('found')
+                        amn_results.append(place)
+                amn_results = set(amn_results)
+                amn_results = [place.to_dict() for place in amn_results]
+                for place in amn_results:
+                    del place['amenities']
+                return jsonify(amn_results)
+
+    results = set(results)
+    # print(results)
+    results = [place.to_dict() for place in results]
+    # for i in results:
+    # print(results)
+    return jsonify(results)
